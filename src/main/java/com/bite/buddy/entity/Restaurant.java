@@ -16,23 +16,25 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Restaurant {
 
     @Id
-    private String userId;
-    private String name;
-    private String email;
-    private String phoneNumber;
-    private String password;
-    private String role;
+    private String restaurantId;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Address> addresses;
+    private String restaurantName;
+    private String location;
+    private String cuisine;
+    private Double rating;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    private List<Menu> menus;
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Order> orders;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Review> reviews;
+
+    // Getters & Setters
 }
 

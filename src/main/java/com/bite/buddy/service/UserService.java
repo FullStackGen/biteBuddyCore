@@ -3,16 +3,17 @@ package com.bite.buddy.service;
 import com.bite.buddy.model.UserDto;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
 
-    UserDto registerUser(UserDto user);
+    UserDto registerUser(Map<String, Object> requestMap);
 
-    UserDto updateUser(UserDto user, String userId);
+    UserDto updateUser(Map<String, Object> requestMap);
 
-    UserDto getUser(String userId);
+    UserDto getUser(Map<String, Object> requestMap);
 
     List<UserDto> getAllUsers();
 
-    void deleteUser(String userId);
+    void deleteUser(Map<String, Object> requestMap);
 }

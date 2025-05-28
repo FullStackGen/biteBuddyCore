@@ -1,5 +1,6 @@
 package com.bite.buddy.model;
 
+import com.bite.buddy.entity.Address;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,5 +14,6 @@ public class UserDto {
     private String email;
     private String phoneNumber;
     private String password;
-    private List<String> addresses;
+    private String role;
+    private List<Address> addresses;
 }
