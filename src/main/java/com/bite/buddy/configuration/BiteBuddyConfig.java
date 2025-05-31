@@ -20,9 +20,4 @@ public class BiteBuddyConfig {
                 .setFieldAccessLevel(AccessLevel.PRIVATE);
         return modelMapper;
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

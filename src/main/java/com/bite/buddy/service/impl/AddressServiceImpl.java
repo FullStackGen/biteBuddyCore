@@ -32,7 +32,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public AddressDto addAddress(Map<String, Object> requestMap) {
         AddressDto addressDto = (AddressDto) requestMap.get("address");
-        String userId = requestMap.get("userId").toString();
+        String userId = addressDto.getUserId();
         Address address = modelMapper.map(addressDto, Address.class);
         UUID id = UUID.randomUUID();
         long n = (id.getLeastSignificantBits() ^ id.getMostSignificantBits()) & Long.MAX_VALUE;

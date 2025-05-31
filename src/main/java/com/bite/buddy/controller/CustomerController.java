@@ -1,9 +1,8 @@
 package com.bite.buddy.controller;
 
-import com.bite.buddy.model.AddressDto;
-import com.bite.buddy.model.ApiResponse;
-import com.bite.buddy.model.UserDto;
+import com.bite.buddy.model.*;
 import com.bite.buddy.service.AddressService;
+import com.bite.buddy.service.ReviewService;
 import com.bite.buddy.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/biteBuddy")
-public class UserController {
+public class CustomerController {
 
     @Autowired
     private UserService userService;
@@ -25,8 +24,11 @@ public class UserController {
     @Autowired
     private AddressService addressService;
 
+    @Autowired
+    private ReviewService reviewService;
+
     // POST
-    @PostMapping("/user/register")
+    @PostMapping("/auth/user/register")
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("user", userDto);
@@ -35,7 +37,7 @@ public class UserController {
     }
 
     // PUT
-    @PutMapping("/user/modify/{userId}")
+    @PutMapping("/customer/user/modify/{userId}")
     public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable String userId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("user", userDto);
@@ -45,7 +47,7 @@ public class UserController {
     }
 
     // DELETE
-    @DeleteMapping("/user/delete/{userId}")
+    @DeleteMapping("/customer/user/delete/{userId}")
     public ResponseEntity<ApiResponse> deleteUser(@PathVariable String userId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("userId", userId);
@@ -54,29 +56,28 @@ public class UserController {
     }
 
     // GET
-    @GetMapping("/user/search")
+    @GetMapping("/admin/user/search")
     public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity.ok(this.userService.getAllUsers());
     }
 
     // GET
-    @GetMapping("/user/search/{userId}")
+    @GetMapping("/customer/user/search/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable("userId") String uid) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("userId", uid);
         return ResponseEntity.ok(this.userService.getUser(requestMap));
     }
 
-    @PostMapping("/user/address/add/{userId}")
-    public ResponseEntity<AddressDto> addAddress(@Valid @RequestBody AddressDto addressDto, @PathVariable String userId) {
+    @PostMapping("/customer/user/address/add")
+    public ResponseEntity<AddressDto> addAddress(@Valid @RequestBody AddressDto addressDto) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("address", addressDto);
-        requestMap.put("userId", userId);
         AddressDto addedAddressDto = this.addressService.addAddress(requestMap);
         return new ResponseEntity<>(addedAddressDto, HttpStatus.CREATED);
     }
 
-    @PutMapping("/user/address/modify/{addressId}")
+    @PutMapping("/customer/user/address/modify/{addressId}")
     public ResponseEntity<AddressDto> updateAddress(@Valid @RequestBody AddressDto addressDto, @PathVariable String addressId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("address", addressDto);
@@ -85,7 +86,7 @@ public class UserController {
         return new ResponseEntity<>(updatedAddressDto, HttpStatus.OK);
     }
 
-    @DeleteMapping("/user/address/delete/{addressId}")
+    @DeleteMapping("/customer/user/address/delete/{addressId}")
     public ResponseEntity<ApiResponse> deleteAddress(@PathVariable String addressId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("addressId", addressId);
@@ -93,11 +94,46 @@ public class UserController {
         return ResponseEntity.ok(new ApiResponse("Address deleted successfully", true));
     }
 
-    @GetMapping("/user/address/search/{userId}")
+    @GetMapping("/customer/user/address/search/{userId}")
     public ResponseEntity<List<AddressDto>> getAllAddresses(@PathVariable("userId") String userId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("userId", userId);
         return ResponseEntity.ok(this.addressService.getAllAddress(requestMap));
+    }
+
+    @PostMapping("/customer/review/add")
+    public ResponseEntity<ReviewDto> addReview(@Valid @RequestBody ReviewDto reviewDto) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("review", reviewDto);
+        ReviewDto createdDto = this.reviewService.addReview(requestMap);
+        return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
+    }
+
+    // PUT
+    @PutMapping("/customer/review/modify/{reviewId}")
+    public ResponseEntity<ReviewDto> updateReview(@Valid @RequestBody ReviewDto reviewDto, @PathVariable String reviewId) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("review", reviewDto);
+        requestMap.put("reviewId", reviewId);
+        ReviewDto updatedDto = this.reviewService.updateReview(requestMap);
+        return new ResponseEntity<>(updatedDto, HttpStatus.OK);
+    }
+
+    // DELETE
+    @DeleteMapping("/customer/review/delete/{reviewId}")
+    public ResponseEntity<ApiResponse> deleteReview(@PathVariable String reviewId) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("reviewId", reviewId);
+        this.reviewService.deleteReview(requestMap);
+        return ResponseEntity.ok(new ApiResponse("Review deleted successfully", true));
+    }
+
+    // GET
+    @GetMapping("/customer/review/search/{restaurantId}")
+    public ResponseEntity<List<ReviewDto>> getAllReviewByRestaurant(@PathVariable("restaurantId") String restaurantId) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("restaurantId", restaurantId);
+        return ResponseEntity.ok(this.reviewService.getReviewsByRestaurant(requestMap));
     }
 }
 

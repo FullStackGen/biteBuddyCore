@@ -36,7 +36,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDto addReview(Map<String, Object> requestMap) {
         ReviewDto dto = (ReviewDto) requestMap.get("review");
-        String userId = requestMap.get("userId").toString();
+        String userId = dto.getUserId();
         String restaurantId = requestMap.get("restaurantId").toString();
         User user = userRepo.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
@@ -44,6 +44,10 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurant", "id", restaurantId));
         Review review = modelMapper.map(dto, Review.class);
         review.setUser(user);
+        int noUser = reviewRepo.countByRestaurantId(restaurantId);
+        double avgRating = (review.getRating() + restaurant.getRating())/(noUser+1);
+        restaurant.setRating(avgRating);
+        restaurantRepo.save(restaurant);
         review.setRestaurant(restaurant);
         UUID id = UUID.randomUUID();
         long n = (id.getLeastSignificantBits() ^ id.getMostSignificantBits()) & Long.MAX_VALUE;
@@ -57,6 +61,13 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewDto dto = (ReviewDto) requestMap.get("review");
         Review review = reviewRepo.findByReviewId(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review", "id", reviewId));
+        if(dto.getRating() != null) {
+            Restaurant restaurant = review.getRestaurant();
+            int noUser = reviewRepo.countByRestaurantId(restaurant.getRestaurantId());
+            double avgRating = (dto.getRating() + restaurant.getRating() - review.getRating()) / (noUser);
+            restaurant.setRating(avgRating);
+            restaurantRepo.save(restaurant);
+        }
         modelMapper.map(dto, review);
         return modelMapper.map(reviewRepo.save(review), ReviewDto.class);
     }
@@ -76,7 +87,13 @@ public class ReviewServiceImpl implements ReviewService {
         String reviewId = requestMap.get("reviewId").toString();
         Review review = reviewRepo.findByReviewId(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review", "id", reviewId));
+        if(review.getRating() != null) {
+            Restaurant restaurant = review.getRestaurant();
+            int noUser = reviewRepo.countByRestaurantId(restaurant.getRestaurantId());
+            double avgRating = (restaurant.getRating() - review.getRating()) / (noUser - 1);
+            restaurant.setRating(avgRating);
+            restaurantRepo.save(restaurant);
+        }
         reviewRepo.delete(review);
     }
 }
-

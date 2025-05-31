@@ -31,7 +31,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public MenuDto addMenuItem(Map<String, Object> requestMap) {
         MenuDto dto = (MenuDto) requestMap.get("menu");
-        String restaurantId = requestMap.get("restaurantId").toString();
+        String restaurantId = dto.getRestaurantId();
         Restaurant restaurant = restaurantRepo.findByRestaurantId(restaurantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurant", "id", restaurantId));
         Menu menu = modelMapper.map(dto, Menu.class);

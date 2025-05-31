@@ -11,4 +11,5 @@ public class RestaurantDto {
     private String location;
     private String cuisine;
     private Double rating;
+    private String status;
 }

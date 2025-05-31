@@ -25,6 +25,7 @@ public class Restaurant {
     private String location;
     private String cuisine;
     private Double rating;
+    private String status;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Menu> menus;
