@@ -55,7 +55,8 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<MenuDto> getMenuByRestaurant(Map<String, Object> requestMap) {
         String restaurantId = requestMap.get("restaurantId").toString();
-        List<Menu> menus = menuRepo.findByRestaurant_RestaurantId(restaurantId);
+        List<Menu> menus = menuRepo.findByRestaurant_RestaurantId(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Menu", "id", restaurantId));
         return menus.stream()
                 .map(menu -> modelMapper.map(menu, MenuDto.class))
                 .collect(Collectors.toList());

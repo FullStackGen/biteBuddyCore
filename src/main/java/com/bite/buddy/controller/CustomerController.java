@@ -1,9 +1,7 @@
 package com.bite.buddy.controller;
 
 import com.bite.buddy.model.*;
-import com.bite.buddy.service.AddressService;
-import com.bite.buddy.service.ReviewService;
-import com.bite.buddy.service.UserService;
+import com.bite.buddy.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +24,12 @@ public class CustomerController {
 
     @Autowired
     private ReviewService reviewService;
+
+    @Autowired
+    private CartItemService cartItemService;
+
+    @Autowired
+    private CartService cartService;
 
     // POST
     @PostMapping("/auth/user/register")
@@ -135,5 +139,74 @@ public class CustomerController {
         requestMap.put("restaurantId", restaurantId);
         return ResponseEntity.ok(this.reviewService.getReviewsByRestaurant(requestMap));
     }
-}
 
+    @PostMapping("/customer/cart/add")
+    public ResponseEntity<CartDto> addCart(@Valid @RequestBody CartDto cartDto) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("cart", cartDto);
+        CartDto createdDto = this.cartService.createCart(requestMap);
+        return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
+    }
+
+    // PUT
+    @PutMapping("/customer/cart/modify/{cartId}")
+    public ResponseEntity<CartDto> updateCart(@Valid @RequestBody CartDto cartDto, @PathVariable String cartId) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("cart", cartDto);
+        requestMap.put("cartId", cartId);
+        CartDto updatedDto = this.cartService.updateCart(requestMap);
+        return new ResponseEntity<>(updatedDto, HttpStatus.OK);
+    }
+
+    // DELETE
+    @DeleteMapping("/customer/cart/delete/{cartId}")
+    public ResponseEntity<ApiResponse> deleteCart(@PathVariable String cartId) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("cartId", cartId);
+        this.cartService.deleteCart(requestMap);
+        return ResponseEntity.ok(new ApiResponse("Cart deleted successfully", true));
+    }
+
+    // GET
+    @GetMapping("/customer/cart/search/{userId}")
+    public ResponseEntity<List<CartDto>> getAllCartsByUser(@PathVariable("userId") String userId) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("userId", userId);
+        return ResponseEntity.ok(this.cartService.getCartsByUser(requestMap));
+    }
+
+    @PostMapping("/customer/cart-item/add")
+    public ResponseEntity<CartItemDto> addCartItem(@Valid @RequestBody CartItemDto cartItemDto) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("cartItem", cartItemDto);
+        CartItemDto createdDto = this.cartItemService.addCartItem(requestMap);
+        return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
+    }
+
+    // PUT
+    @PutMapping("/customer/cart-item/modify/{cartItemId}")
+    public ResponseEntity<CartItemDto> updateCartItem(@Valid @RequestBody CartItemDto cartItemDto, @PathVariable String cartItemId) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("cartItem", cartItemDto);
+        requestMap.put("cartItemId", cartItemId);
+        CartItemDto updatedDto = this.cartItemService.updateCartItem(requestMap);
+        return new ResponseEntity<>(updatedDto, HttpStatus.OK);
+    }
+
+    // DELETE
+    @DeleteMapping("/customer/cart-item/delete/{cartItemId}")
+    public ResponseEntity<ApiResponse> deleteCartItem(@PathVariable String cartItemId) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("cartItemId", cartItemId);
+        this.cartItemService.deleteCartItem(requestMap);
+        return ResponseEntity.ok(new ApiResponse("CartItem deleted successfully", true));
+    }
+
+    // GET
+    @GetMapping("/customer/cart-item/search/{cartId}")
+    public ResponseEntity<List<CartItemDto>> getAllCartItemsByCart(@PathVariable("cartId") String cartId) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("cartId", cartId);
+        return ResponseEntity.ok(this.cartItemService.getItemsByCart(requestMap));
+    }
+}

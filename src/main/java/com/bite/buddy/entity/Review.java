@@ -1,5 +1,6 @@
 package com.bite.buddy.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -19,10 +20,12 @@ public class Review {
     @Id
     private String reviewId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;

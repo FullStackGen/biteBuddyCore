@@ -1,5 +1,6 @@
 package com.bite.buddy.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -19,6 +20,7 @@ public class Menu {
     @Id
     private String menuId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
@@ -27,6 +29,6 @@ public class Menu {
     private String description;
     private Double price;
     private String category;
+    private boolean isAvailable;
 
 }
-

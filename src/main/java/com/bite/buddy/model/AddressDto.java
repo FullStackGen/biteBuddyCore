@@ -12,4 +12,5 @@ public class AddressDto {
     private String state;
     private String locality;
     private String userId;
+    private boolean isDefault;
 }

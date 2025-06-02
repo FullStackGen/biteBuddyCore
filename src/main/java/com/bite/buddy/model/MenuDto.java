@@ -12,4 +12,5 @@ public class MenuDto {
     private String description;
     private Double price;
     private String category;
+    private boolean isAvailable;
 }

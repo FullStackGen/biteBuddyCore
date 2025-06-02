@@ -1,5 +1,6 @@
 package com.bite.buddy.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -19,6 +20,7 @@ public class Payment {
     @Id
     private String paymentId;
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "order_id")
     private Order order;

@@ -1,9 +1,9 @@
 package com.bite.buddy.model;
 
-import com.bite.buddy.entity.Address;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -15,5 +15,6 @@ public class UserDto {
     private String phoneNumber;
     private String password;
     private String role;
-    private List<Address> addresses;
+    private List<AddressDto> addresses;
+    private LocalDateTime createdOn;
 }

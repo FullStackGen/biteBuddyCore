@@ -1,16 +1,15 @@
 package com.bite.buddy.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+@Table(name = "users")
 @Entity
 @Getter
 @Setter
@@ -25,6 +24,7 @@ public class User {
     private String phoneNumber;
     private String password;
     private String role;
+    private LocalDateTime createdOn;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Address> addresses;
