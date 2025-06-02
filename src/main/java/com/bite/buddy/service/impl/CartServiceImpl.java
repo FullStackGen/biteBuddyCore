@@ -1,13 +1,10 @@
 package com.bite.buddy.service.impl;
 
-import com.bite.buddy.entity.Address;
 import com.bite.buddy.entity.Cart;
 import com.bite.buddy.entity.Restaurant;
 import com.bite.buddy.entity.User;
 import com.bite.buddy.exceptions.ResourceNotFoundException;
-import com.bite.buddy.model.AddressDto;
 import com.bite.buddy.model.CartDto;
-import com.bite.buddy.model.RestaurantDto;
 import com.bite.buddy.repository.CartRepo;
 import com.bite.buddy.repository.RestaurantRepo;
 import com.bite.buddy.repository.UserRepo;

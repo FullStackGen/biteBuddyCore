@@ -45,7 +45,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = modelMapper.map(dto, Review.class);
         review.setUser(user);
         int noUser = reviewRepo.countByRestaurantId(restaurantId);
-        double avgRating = (review.getRating() + restaurant.getRating())/(noUser+1);
+        double avgRating = (review.getRating() + restaurant.getRating()) / (noUser + 1);
         restaurant.setRating(avgRating);
         restaurantRepo.save(restaurant);
         review.setRestaurant(restaurant);
@@ -61,7 +61,7 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewDto dto = (ReviewDto) requestMap.get("review");
         Review review = reviewRepo.findByReviewId(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review", "id", reviewId));
-        if(dto.getRating() != null) {
+        if (dto.getRating() != null) {
             Restaurant restaurant = review.getRestaurant();
             int noUser = reviewRepo.countByRestaurantId(restaurant.getRestaurantId());
             double avgRating = (dto.getRating() + restaurant.getRating() - review.getRating()) / (noUser);
@@ -87,7 +87,7 @@ public class ReviewServiceImpl implements ReviewService {
         String reviewId = requestMap.get("reviewId").toString();
         Review review = reviewRepo.findByReviewId(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review", "id", reviewId));
-        if(review.getRating() != null) {
+        if (review.getRating() != null) {
             Restaurant restaurant = review.getRestaurant();
             int noUser = reviewRepo.countByRestaurantId(restaurant.getRestaurantId());
             double avgRating = (restaurant.getRating() - review.getRating()) / (noUser - 1);

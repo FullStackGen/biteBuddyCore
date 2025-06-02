@@ -1,10 +1,10 @@
 package com.bite.buddy.controller;
 
-import com.bite.buddy.model.*;
-import com.bite.buddy.service.AddressService;
+import com.bite.buddy.model.ApiResponse;
+import com.bite.buddy.model.MenuDto;
+import com.bite.buddy.model.RestaurantDto;
 import com.bite.buddy.service.MenuService;
 import com.bite.buddy.service.RestaurantService;
-import com.bite.buddy.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

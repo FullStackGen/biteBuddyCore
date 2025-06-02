@@ -2,8 +2,6 @@ package com.bite.buddy.repository;
 
 
 import com.bite.buddy.entity.Cart;
-import com.bite.buddy.entity.CartItem;
-import com.bite.buddy.entity.Restaurant;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

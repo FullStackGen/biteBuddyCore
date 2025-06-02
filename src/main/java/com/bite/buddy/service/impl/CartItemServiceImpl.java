@@ -1,19 +1,18 @@
 package com.bite.buddy.service.impl;
 
-import com.bite.buddy.entity.*;
+import com.bite.buddy.entity.Cart;
+import com.bite.buddy.entity.CartItem;
+import com.bite.buddy.entity.Menu;
 import com.bite.buddy.exceptions.ResourceNotFoundException;
-import com.bite.buddy.model.CartDto;
 import com.bite.buddy.model.CartItemDto;
-import com.bite.buddy.model.MenuDto;
-import com.bite.buddy.repository.*;
+import com.bite.buddy.repository.CartItemRepo;
+import com.bite.buddy.repository.CartRepo;
+import com.bite.buddy.repository.MenuRepo;
 import com.bite.buddy.service.CartItemService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;

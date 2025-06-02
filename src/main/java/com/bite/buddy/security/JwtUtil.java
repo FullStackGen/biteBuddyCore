@@ -1,6 +1,6 @@
 package com.bite.buddy.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
-import static io.jsonwebtoken.Jwts.*;
+import static io.jsonwebtoken.Jwts.builder;
 
 @Component
 public class JwtUtil {
