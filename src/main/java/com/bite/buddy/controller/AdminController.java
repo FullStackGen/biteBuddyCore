@@ -101,7 +101,7 @@ public class AdminController {
         return ResponseEntity.ok(this.menuService.getMenuByRestaurant(requestMap));
     }
 
-    @GetMapping("/admin/restaurant/menu/search/{state}")
+    @GetMapping("/admin/restaurant/search/state/{state}")
     public ResponseEntity<List<RestaurantDto>> getAllRestaurantByState(@PathVariable("state") String state) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("state", state);
