@@ -16,5 +16,7 @@ public interface RestaurantService {
     RestaurantDto getRestaurantById(Map<String, Object> requestMap);
 
     void deleteRestaurant(Map<String, Object> requestMap);
+
+    List<RestaurantDto> getRestaurantsByState(Map<String, Object> requestMap);
 }
 

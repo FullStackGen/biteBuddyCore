@@ -11,6 +11,8 @@ import com.bite.buddy.repository.UserRepo;
 import com.bite.buddy.service.ReviewService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +36,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @CacheEvict(value = "reviewsByRestaurant", key = "#dto.restaurantId")
     public ReviewDto addReview(Map<String, Object> requestMap) {
         ReviewDto dto = (ReviewDto) requestMap.get("review");
         String userId = dto.getUserId();
@@ -56,6 +59,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @CacheEvict(value = "reviewsByRestaurant", key = "#dto.restaurantId")
     public ReviewDto updateReview(Map<String, Object> requestMap) {
         String reviewId = requestMap.get("reviewId").toString();
         ReviewDto dto = (ReviewDto) requestMap.get("review");
@@ -73,6 +77,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Cacheable(value = "reviewsByRestaurant", key = "#requestMap['restaurantId']")
     public List<ReviewDto> getReviewsByRestaurant(Map<String, Object> requestMap) {
         String restaurantId = requestMap.get("restaurantId").toString();
         List<Review> reviews = reviewRepo.findByRestaurant_RestaurantId(restaurantId)
@@ -83,6 +88,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @CacheEvict(value = "reviewsByRestaurant", key = "#restaurantId")
     public void deleteReview(Map<String, Object> requestMap) {
         String reviewId = requestMap.get("reviewId").toString();
         Review review = reviewRepo.findByReviewId(reviewId)
@@ -94,6 +100,7 @@ public class ReviewServiceImpl implements ReviewService {
             restaurant.setRating(avgRating);
             restaurantRepo.save(restaurant);
         }
+        String restaurantId = review.getRestaurant().getRestaurantId();
         reviewRepo.delete(review);
     }
 }

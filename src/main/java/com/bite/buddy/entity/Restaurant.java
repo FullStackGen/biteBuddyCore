@@ -22,6 +22,9 @@ public class Restaurant {
     private String restaurantId;
 
     private String restaurantName;
+    private String city;
+    private String zip;
+    private String state;
     private String location;
     private String cuisine;
     private Double rating;
