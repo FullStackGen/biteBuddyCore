@@ -52,6 +52,11 @@ public class RestaurantServiceImpl implements RestaurantService {
         Restaurant entity = restaurantRepo.findByRestaurantId(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurant", "id", id));
         modelMapper.map(dto, entity);
+        String state = entity.getState();
+        Cache cache = cacheManager.getCache("restaurantsByState");
+        if (cache != null) {
+            cache.evict(state);
+        }
         return modelMapper.map(restaurantRepo.save(entity), RestaurantDto.class);
     }
 
