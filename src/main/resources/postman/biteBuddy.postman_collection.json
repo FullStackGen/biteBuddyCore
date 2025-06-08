@@ -10,76 +10,6 @@
 			"name": "User",
 			"item": [
 				{
-					"name": "create user",
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									"generateRandomString = (length) => {\r",
-									"  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\r",
-									"  let result = '';\r",
-									"\r",
-									"  for (let i = 0; i < length; i++) {\r",
-									"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
-									"    result += characters.charAt(randomIndex);\r",
-									"  }\r",
-									"\r",
-									"  return result;\r",
-									"}\r",
-									"\r",
-									"var user = generateRandomString(5)\r",
-									"pm.variables.set(\"user\",user)\r",
-									"var userEmail = user + \"@gmail.com\"\r",
-									"pm.variables.set(\"userEmail\",userEmail)\r",
-									"var userAbout = \"I am \" + user;\r",
-									"pm.variables.set(\"userAbout\",userAbout)\r",
-									"var userPassword = user + \"@1In\"\r",
-									"pm.variables.set(\"userPassword\",userPassword)"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ6RkJwd0BnbWFpbC5jb20iLCJpYXQiOjE3MTU5Mjk4MDYsImV4cCI6MTcxNTk0NzgwNn0.67_T5GTSPypIUg4XqOcHwLrV21XqPEK1rZlj6QmQTV5aF6WPDELiWnJrjRr_801FPSt6L-qKEu8EsBfW8lQQew",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"{{user}}\",\r\n    \"email\":\"{{userEmail}}\",\r\n    \"about\":\"{{userAbout}}\",\r\n    \"password\":\"{{userPassword}}\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:9090/insight/user",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "9090",
-							"path": [
-								"insight",
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "register user",
 					"event": [
 						{
@@ -128,7 +58,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"{{user}}\",\r\n    \"email\":\"{{userEmail}}\",\r\n    \"phoneNumber\":\"{{phoneNumber}}\",\r\n    \"password\":\"{{userPassword}}\",\r\n    \"addresses\":[\r\n        \"{{address}}\"\r\n    ]\r\n\r\n}",
+							"raw": "{\r\n    \"name\":\"{{user}}\",\r\n    \"email\":\"{{userEmail}}\",\r\n    \"phoneNumber\":\"{{phoneNumber}}\",\r\n    \"password\":\"{{userPassword}}\",\r\n    \"role\":\"ROLE_CUSTOMER\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -136,29 +66,36 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9090/biteBuddy/user/register",
-							"protocol": "http",
+							"raw": "{{url}}/auth/users",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "9090",
 							"path": [
-								"biteBuddy",
-								"user",
-								"register"
+								"auth",
+								"users"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "http://localhost:8080/insight/user/7",
+					"name": "modify user",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"Raj\",\r\n    \"email\":\"raj@gmail.com\",\r\n    \"addresses\":[\"sertgvftg\",\"mjhytffgh\"],\r\n    \"password\":\"asdf\"\r\n}",
+							"raw": "{\r\n    \"name\":\"{{user}}\",\r\n    \"phoneNumber\":\"{{phoneNumber}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -166,41 +103,40 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9090/biteBuddy/user/modify/US.-1785304286862092874",
-							"protocol": "http",
+							"raw": "{{url}}/users/US.6070114390586339651",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "9090",
 							"path": [
-								"biteBuddy",
-								"user",
-								"modify",
-								"US.-1785304286862092874"
+								"users",
+								"US.6070114390586339651"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "http://localhost:8080/insight/user/9",
+					"name": "delete user",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9090/biteBuddy/user/delete/US.-1785304286862092874",
-							"protocol": "http",
+							"raw": "{{url}}/users/US.-1785304286862092874",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "9090",
 							"path": [
-								"biteBuddy",
-								"user",
-								"delete",
+								"users",
 								"US.-1785304286862092874"
 							]
 						}
@@ -208,42 +144,34 @@
 					"response": []
 				},
 				{
-					"name": "http://localhost:8080/insight/user/10",
+					"name": "user search",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9090/biteBuddy/user/search",
-							"protocol": "http",
+							"raw": "{{url}}/users",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "9090",
 							"path": [
-								"biteBuddy",
-								"user",
-								"search"
+								"users"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "http://localhost:8080/insight/user",
+					"name": "user by id",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9090/biteBuddy/user/search/US.-1785304286862092874",
-							"protocol": "http",
+							"raw": "{{url}}/users/US.-1785304286862092874",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "9090",
 							"path": [
-								"biteBuddy",
-								"user",
-								"search",
+								"users",
 								"US.-1785304286862092874"
 							]
 						}
@@ -251,13 +179,25 @@
 					"response": []
 				},
 				{
-					"name": "login user",
+					"name": "login admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"admin_token\",pm.response.json().token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"StCls@gmail.com\",\r\n    \"password\":\"Ins@248\"\r\n}",
+							"raw": "{\r\n    \"email\":\"ZixcB@gmail.com\",\r\n    \"password\":\"ZixcB@1In\"\r\n}\r\n\r\n// {\r\n//     \"email\":\"EBuNf@gmail.com\",\r\n//     \"password\":\"EBuNf@1In\"\r\n// }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -265,14 +205,50 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9090/insight/auth/login",
-							"protocol": "http",
+							"raw": "{{url}}/auth/login",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "9090",
 							"path": [
-								"insight",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login customer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"customer_token\",pm.response.json().token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"crGNE@gmail.com\",\r\n    \"password\":\"crGNE@1In\"\r\n}\r\n\r\n// {\r\n//     \"email\":\"zAuoX@gmail.com\",\r\n//     \"password\":\"zAuoX@1In\"\r\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
 								"auth",
 								"login"
 							]
@@ -283,10 +259,506 @@
 			]
 		},
 		{
-			"name": "Comment",
+			"name": "Restaurant",
 			"item": [
 				{
-					"name": "create comment",
+					"name": "add restaurant",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"generateRandomString = (length) => {\r",
+									"  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\r",
+									"  let result = '';\r",
+									"\r",
+									"  for (let i = 0; i < length; i++) {\r",
+									"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
+									"    result += characters.charAt(randomIndex);\r",
+									"  }\r",
+									"\r",
+									"  return result;\r",
+									"}\r",
+									"\r",
+									"function generateRandom10DigitNumber() {\r",
+									"  const min = 1000000000; // Smallest 10-digit number\r",
+									"  const max = 9999999999; // Largest 10-digit number\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"var user = generateRandomString(5)\r",
+									"pm.variables.set(\"user\",user)\r",
+									"var userEmail = user + \"@gmail.com\"\r",
+									"pm.variables.set(\"userEmail\",userEmail)\r",
+									"var phoneNumber = \"+91 \" + generateRandom10DigitNumber();\r",
+									"pm.variables.set(\"phoneNumber\",phoneNumber)\r",
+									"var userPassword = user + \"@1In\"\r",
+									"pm.variables.set(\"userPassword\",userPassword)\r",
+									"var address = generateRandomString(15)\r",
+									"pm.variables.set(\"address\",address)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"restaurantName\":\"{{user}}\",\r\n    \"location\":\"BBSR\",\r\n    \"cuisine\":\"Mexican\",\r\n    \"rating\":5.0,\r\n    \"status\":\"Y\",\r\n    \"state\":\"odisha\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/admin/restaurants",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"restaurants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modify restaurant",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"generateRandomString = (length) => {\r",
+									"  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\r",
+									"  let result = '';\r",
+									"\r",
+									"  for (let i = 0; i < length; i++) {\r",
+									"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
+									"    result += characters.charAt(randomIndex);\r",
+									"  }\r",
+									"\r",
+									"  return result;\r",
+									"}\r",
+									"\r",
+									"function generateRandom10DigitNumber() {\r",
+									"  const min = 1000000000; // Smallest 10-digit number\r",
+									"  const max = 9999999999; // Largest 10-digit number\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"var user = generateRandomString(5)\r",
+									"pm.variables.set(\"user\",user)\r",
+									"var userEmail = user + \"@gmail.com\"\r",
+									"pm.variables.set(\"userEmail\",userEmail)\r",
+									"var phoneNumber = \"+91 \" + generateRandom10DigitNumber();\r",
+									"pm.variables.set(\"phoneNumber\",phoneNumber)\r",
+									"var userPassword = user + \"@1In\"\r",
+									"pm.variables.set(\"userPassword\",userPassword)\r",
+									"var address = generateRandomString(15)\r",
+									"pm.variables.set(\"address\",address)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"restaurantName\":\"{{user}}\",\r\n    \"location\":\"BBSR\",\r\n    \"cuisine\":\"Chinese\",\r\n    \"rating\":4.9,\r\n    \"status\":\"Y\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/admin/restaurants/EA.2204321438793004530",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"restaurants",
+								"EA.2204321438793004530"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete restaurant",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/admin/restaurants/EA.8767094233772830142",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"restaurants",
+								"EA.8767094233772830142"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "restaurants by state",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/admin/restaurants?state=odisha",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"restaurants"
+							],
+							"query": [
+								{
+									"key": "state",
+									"value": "odisha"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "restaurant by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/admin/restaurants/EA.2204321438793004530",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"restaurants",
+								"EA.2204321438793004530"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Menu",
+			"item": [
+				{
+					"name": "add menu",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"generateRandomString = (length) => {\r",
+									"  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\r",
+									"  let result = '';\r",
+									"\r",
+									"  for (let i = 0; i < length; i++) {\r",
+									"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
+									"    result += characters.charAt(randomIndex);\r",
+									"  }\r",
+									"\r",
+									"  return result;\r",
+									"}\r",
+									"\r",
+									"function generateRandom10DigitNumber() {\r",
+									"  const min = 1000000000; // Smallest 10-digit number\r",
+									"  const max = 9999999999; // Largest 10-digit number\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"var user = generateRandomString(5)\r",
+									"pm.variables.set(\"user\",user)\r",
+									"var userEmail = user + \"@gmail.com\"\r",
+									"pm.variables.set(\"userEmail\",userEmail)\r",
+									"var phoneNumber = \"+91 \" + generateRandom10DigitNumber();\r",
+									"pm.variables.set(\"phoneNumber\",phoneNumber)\r",
+									"var userPassword = user + \"@1In\"\r",
+									"pm.variables.set(\"userPassword\",userPassword)\r",
+									"var address = generateRandomString(15)\r",
+									"pm.variables.set(\"address\",address)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\":\"{{address}}\",\r\n    \"itemName\":\"{{user}}\",\r\n    \"price\":99,\r\n    \"category\":\"veg\",\r\n    \"isAvailable\":\"Y\",\r\n    \"restaurantId\":\"EA.8184859676279801428\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/admin/menus",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"menus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modify menu",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"generateRandomString = (length) => {\r",
+									"  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\r",
+									"  let result = '';\r",
+									"\r",
+									"  for (let i = 0; i < length; i++) {\r",
+									"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
+									"    result += characters.charAt(randomIndex);\r",
+									"  }\r",
+									"\r",
+									"  return result;\r",
+									"}\r",
+									"\r",
+									"function generateRandom10DigitNumber() {\r",
+									"  const min = 1000000000; // Smallest 10-digit number\r",
+									"  const max = 9999999999; // Largest 10-digit number\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"var user = generateRandomString(5)\r",
+									"pm.variables.set(\"user\",user)\r",
+									"var userEmail = user + \"@gmail.com\"\r",
+									"pm.variables.set(\"userEmail\",userEmail)\r",
+									"var phoneNumber = \"+91 \" + generateRandom10DigitNumber();\r",
+									"pm.variables.set(\"phoneNumber\",phoneNumber)\r",
+									"var userPassword = user + \"@1In\"\r",
+									"pm.variables.set(\"userPassword\",userPassword)\r",
+									"var address = generateRandomString(15)\r",
+									"pm.variables.set(\"address\",address)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\":\"{{address}}\",\r\n    \"itemName\":\"{{user}}\",\r\n    \"price\":99,\r\n    \"category\":\"nonveg\",\r\n    \"isAvailable\":\"Y\",\r\n    \"restaurantId\":\"EA.2204321438793004530\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/admin/menus/ME.1434738862228014677",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"menus",
+								"ME.1434738862228014677"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete menu",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/admin/menus/ME.7987630179039083577",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"menus",
+								"ME.7987630179039083577"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "menus by restaurant",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/admin/restaurants/EA.2204321438793004530/menus",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"restaurants",
+								"EA.2204321438793004530",
+								"menus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "menu by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/admin/menus/ME.1434738862228014677",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"menus",
+								"ME.1434738862228014677"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Review",
+			"item": [
+				{
+					"name": "add review",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -318,7 +790,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwiaWF0IjoxNzE1ODY1NDEyLCJleHAiOjE3MTU4ODM0MTJ9.xWYWWb8xfFzioPU3TBfE89yfJiGfcIeUZdaUVIES_OU_l9yMLX6bXAvd7SBm0WaPWbHFNAfq05B42a04TRdYNg",
+									"value": "{{customer_token}}",
 									"type": "string"
 								}
 							]
@@ -327,7 +799,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"commentContent\":\"{{commentContent}}\"\r\n}",
+							"raw": "{\r\n    \"comment\":\"{{commentContent}}\",\r\n    \"userId\":\"US.3738513005666796492\",\r\n    \"restaurantId\":\"EA.8184859676279801428\",\r\n    \"rating\":3\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -335,32 +807,61 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9090/insight/user/2/post/2/comment",
-							"protocol": "http",
+							"raw": "{{url}}/customer/reviews",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "9090",
 							"path": [
-								"insight",
-								"user",
-								"2",
-								"post",
-								"2",
-								"comment"
+								"customer",
+								"reviews"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "http://localhost:8080/insight/user/7",
+					"name": "modify review",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"generateRandomString = (length) => {\r",
+									"  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\r",
+									"  let result = '';\r",
+									"\r",
+									"  for (let i = 0; i < length; i++) {\r",
+									"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
+									"    result += characters.charAt(randomIndex);\r",
+									"  }\r",
+									"\r",
+									"  return result;\r",
+									"}\r",
+									"\r",
+									"var commentContent = generateRandomString(10)\r",
+									"pm.variables.set(\"commentContent\",commentContent)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"category_name\":\"LifeStyle\",\r\n    \"category_description\":\"Anything About LifeStyle\"\r\n}",
+							"raw": "{\r\n    \"comment\":\"{{commentContent}}\",\r\n    \"userId\":\"US.3738513005666796492\",\r\n    \"restaurantId\":\"EA.8184859676279801428\",\r\n    \"rating\":4\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -368,78 +869,648 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9090/insight/category/4",
-							"protocol": "http",
+							"raw": "{{url}}/customer/reviews/RE.7723115553906533946",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "9090",
 							"path": [
-								"insight",
-								"category",
-								"4"
+								"customer",
+								"reviews",
+								"RE.7723115553906533946"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "http://localhost:8080/insight/user/9",
+					"name": "delete review",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9090/insight/category/9",
-							"protocol": "http",
+							"raw": "{{url}}/customer/reviews/234567",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "9090",
 							"path": [
-								"insight",
-								"category",
-								"9"
+								"customer",
+								"reviews",
+								"234567"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "http://localhost:8080/insight/user/10",
+					"name": "review by key",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9090/insight/category/4",
-							"protocol": "http",
+							"raw": "{{url}}/customer/reviews?restaurantId=EA.8184859676279801428&userId=US.3738513005666796492",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "9090",
 							"path": [
-								"insight",
-								"category",
-								"4"
+								"customer",
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "restaurantId",
+									"value": "EA.8184859676279801428"
+								},
+								{
+									"key": "userId",
+									"value": "US.3738513005666796492"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Address",
+			"item": [
+				{
+					"name": "add address",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"generateRandomString = (length) => {\r",
+									"  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\r",
+									"  let result = '';\r",
+									"\r",
+									"  for (let i = 0; i < length; i++) {\r",
+									"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
+									"    result += characters.charAt(randomIndex);\r",
+									"  }\r",
+									"\r",
+									"  return result;\r",
+									"}\r",
+									"\r",
+									"var commentContent = generateRandomString(10)\r",
+									"pm.variables.set(\"commentContent\",commentContent)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"city\": \"Bangalore\",\r\n  \"zip\": \"560001\",\r\n  \"state\": \"Karnataka\",\r\n  \"locality\": \"MG Road\",\r\n  \"userId\": \"US.3738513005666796492\",\r\n  \"defaultAddress\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/customer/addresses",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"addresses"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "http://localhost:8080/insight/user",
+					"name": "modify address",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"generateRandomString = (length) => {\r",
+									"  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\r",
+									"  let result = '';\r",
+									"\r",
+									"  for (let i = 0; i < length; i++) {\r",
+									"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
+									"    result += characters.charAt(randomIndex);\r",
+									"  }\r",
+									"\r",
+									"  return result;\r",
+									"}\r",
+									"\r",
+									"var commentContent = generateRandomString(10)\r",
+									"pm.variables.set(\"commentContent\",commentContent)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"city\": \"Cuttack\",\r\n  \"zip\": \"750001\",\r\n  \"state\": \"Odisha\",\r\n  \"locality\": \"Link Road\",\r\n  \"userId\": \"US.4758920403070878118\",\r\n  \"isDefault\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/customer/addresses/AD.3472733563832153140",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"addresses",
+								"AD.3472733563832153140"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete address",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/customer/addresses/234567",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"addresses",
+								"234567"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "address by user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9090/insight/category",
-							"protocol": "http",
+							"raw": "{{url}}/customer/users/US.3738513005666796492/addresses",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "9090",
 							"path": [
-								"insight",
-								"category"
+								"customer",
+								"users",
+								"US.3738513005666796492",
+								"addresses"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cart",
+			"item": [
+				{
+					"name": "add cart",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"generateRandomString = (length) => {\r",
+									"  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\r",
+									"  let result = '';\r",
+									"\r",
+									"  for (let i = 0; i < length; i++) {\r",
+									"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
+									"    result += characters.charAt(randomIndex);\r",
+									"  }\r",
+									"\r",
+									"  return result;\r",
+									"}\r",
+									"\r",
+									"var commentContent = generateRandomString(10)\r",
+									"pm.variables.set(\"commentContent\",commentContent)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\":\"US.3738513005666796492\",\r\n    \"restaurantId\":\"EA.8184859676279801428\",\r\n    \"activeCart\":true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/customer/carts",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"carts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modify cart",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"generateRandomString = (length) => {\r",
+									"  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\r",
+									"  let result = '';\r",
+									"\r",
+									"  for (let i = 0; i < length; i++) {\r",
+									"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
+									"    result += characters.charAt(randomIndex);\r",
+									"  }\r",
+									"\r",
+									"  return result;\r",
+									"}\r",
+									"\r",
+									"var commentContent = generateRandomString(10)\r",
+									"pm.variables.set(\"commentContent\",commentContent)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\":\"US.4758920403070878118\",\r\n    \"restaurantId\":\"EA.2204321438793004530\",\r\n    \"isActive\":false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/customer/carts/CA.3444513599721279858",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"carts",
+								"CA.3444513599721279858"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/customer/carts/234567",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"carts",
+								"234567"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cart by user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/customer/users/US.4758920403070878118/carts",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"users",
+								"US.4758920403070878118",
+								"carts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cart Item",
+			"item": [
+				{
+					"name": "add cart item",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"generateRandomString = (length) => {\r",
+									"  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\r",
+									"  let result = '';\r",
+									"\r",
+									"  for (let i = 0; i < length; i++) {\r",
+									"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
+									"    result += characters.charAt(randomIndex);\r",
+									"  }\r",
+									"\r",
+									"  return result;\r",
+									"}\r",
+									"\r",
+									"var commentContent = generateRandomString(10)\r",
+									"pm.variables.set(\"commentContent\",commentContent)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cartId\":\"CA.745598136900301201\",\r\n    \"menuId\":\"ME.5108513213957852503\",\r\n    \"quantity\":5,\r\n    \"notes\":\"spicy\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/customer/cart-items",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"cart-items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modify cart item",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"generateRandomString = (length) => {\r",
+									"  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\r",
+									"  let result = '';\r",
+									"\r",
+									"  for (let i = 0; i < length; i++) {\r",
+									"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
+									"    result += characters.charAt(randomIndex);\r",
+									"  }\r",
+									"\r",
+									"  return result;\r",
+									"}\r",
+									"\r",
+									"var commentContent = generateRandomString(10)\r",
+									"pm.variables.set(\"commentContent\",commentContent)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cartId\":\"\",\r\n    \"menuId\":\"\",\r\n    \"quantity\":3,\r\n    \"notes\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/customer/cart-items/234567",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"cart-items",
+								"234567"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete cart item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/customer/cart-items/234567",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"cart-items",
+								"234567"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cart item by cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/customer/carts/234567/cart-items",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"carts",
+								"234567",
+								"cart-items"
 							]
 						}
 					},

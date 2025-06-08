@@ -22,7 +22,7 @@ public class Address {
     private String zip;
     private String state;
     private String locality;
-    private boolean isDefault;
+    private boolean defaultAddress;
 
     @JsonIgnore
     @ManyToOne

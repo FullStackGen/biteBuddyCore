@@ -15,7 +15,7 @@ import lombok.Setter;
 public class CartItem {
 
     @Id
-    private String cartItemId;
+    private String cartItemIdentifier;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -23,8 +23,8 @@ public class CartItem {
     private Cart cart;
 
     @ManyToOne
-    @JoinColumn(name = "menu_item_id")
-    private Menu menuItem;
+    @JoinColumn(name = "menu_id")
+    private Menu menu;
 
     private int quantity;
 

@@ -31,19 +31,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(Map<String, Object> requestMap) {
+    public UserDto registerUser(Map<String, Object> requestMap) {
         UserDto userDto = (UserDto) requestMap.get("user");
-        String userId = (String) requestMap.get("userId");
-        User user = this.userRepo.findByUserId(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
-        user.setName(userDto.getName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
+        User user = this.dtoToUser(userDto);
+        UUID id = UUID.randomUUID();
+        long n = (id.getLeastSignificantBits() ^ id.getMostSignificantBits()) & Long.MAX_VALUE;
+        user.setUserId("US." + n);
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         Date date = new Date();
         LocalDateTime localDateTime = date.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
         user.setCreatedOn(localDateTime);
+        User savedUser = userRepo.save(user);
+        return this.modelMapper.map(savedUser, UserDto.class);
+    }
+
+    @Override
+    public UserDto updateUser(Map<String, Object> requestMap) {
+        UserDto userDto = (UserDto) requestMap.get("user");
+        String userId = (String) requestMap.get("userId");
+        User user = this.userRepo.findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+        modelMapper.map(userDto, user);
+        Date date = new Date();
+        LocalDateTime localDateTime = date.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+        user.setUpdatedOn(localDateTime);
         User savedUser = this.userRepo.save(user);
         return this.userToDto(savedUser);
     }
@@ -79,15 +94,4 @@ public class UserServiceImpl implements UserService {
         return this.modelMapper.map(user, UserDto.class);
     }
 
-    @Override
-    public UserDto registerUser(Map<String, Object> requestMap) {
-        UserDto userDto = (UserDto) requestMap.get("user");
-        User user = this.dtoToUser(userDto);
-        UUID id = UUID.randomUUID();
-        long n = (id.getLeastSignificantBits() ^ id.getMostSignificantBits()) & Long.MAX_VALUE;
-        user.setUserId("US." + n);
-        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
-        User savedUser = userRepo.save(user);
-        return this.modelMapper.map(savedUser, UserDto.class);
-    }
 }

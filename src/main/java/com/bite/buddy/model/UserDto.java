@@ -17,4 +17,5 @@ public class UserDto {
     private String role;
     private List<AddressDto> addresses;
     private LocalDateTime createdOn;
+    private LocalDateTime updatedOn;
 }

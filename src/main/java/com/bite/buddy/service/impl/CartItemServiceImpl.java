@@ -41,12 +41,12 @@ public class CartItemServiceImpl implements CartItemService {
         CartItem entity = modelMapper.map(dto, CartItem.class);
         UUID id = UUID.randomUUID();
         long n = (id.getLeastSignificantBits() ^ id.getMostSignificantBits()) & Long.MAX_VALUE;
-        entity.setCartItemId("CI." + n);
+        entity.setCartItemIdentifier("CI." + n);
         Menu menu = this.menuRepo.findByMenuId(menuId)
                 .orElseThrow(() -> new ResourceNotFoundException("Menu", "id", menuId));
         Cart cart = this.cartRepo.findByCartId(cartId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart", "id", cartId));
-        entity.setMenuItem(menu);
+        entity.setMenu(menu);
         entity.setCart(cart);
         return modelMapper.map(cartItemRepo.save(entity), CartItemDto.class);
     }
@@ -55,7 +55,7 @@ public class CartItemServiceImpl implements CartItemService {
     public CartItemDto updateCartItem(Map<String, Object> requestMap) {
         String cartItemId = requestMap.get("cartItemId").toString();
         CartItemDto dto = (CartItemDto) requestMap.get("cartItem");
-        CartItem cartItem = cartItemRepo.findByCartItemId(cartItemId)
+        CartItem cartItem = cartItemRepo.findByCartItemIdentifier(cartItemId)
                 .orElseThrow(() -> new ResourceNotFoundException("CartItem", "id", cartItemId));
         modelMapper.map(dto, cartItem);
         return modelMapper.map(cartItemRepo.save(cartItem), CartItemDto.class);
@@ -74,7 +74,7 @@ public class CartItemServiceImpl implements CartItemService {
     @Override
     public void deleteCartItem(Map<String, Object> requestMap) {
         String cartItemId = requestMap.get("cartItemId").toString();
-        CartItem cartItem = cartItemRepo.findByCartItemId(cartItemId)
+        CartItem cartItem = cartItemRepo.findByCartItemIdentifier(cartItemId)
                 .orElseThrow(() -> new ResourceNotFoundException("CartItem", "id", cartItemId));
         cartItemRepo.delete(cartItem);
     }

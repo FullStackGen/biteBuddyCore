@@ -15,7 +15,7 @@ public class CartDto {
     private String cartId;
     private String userId;
     private String restaurantId;
-    private boolean isActive;
+    private boolean activeCart;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<CartItemDto> cartItems;

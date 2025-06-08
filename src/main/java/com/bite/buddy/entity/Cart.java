@@ -27,7 +27,7 @@ public class Cart {
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    private boolean isActive = true;
+    private boolean activeCart;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 

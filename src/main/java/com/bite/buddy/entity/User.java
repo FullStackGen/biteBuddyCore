@@ -25,6 +25,7 @@ public class User {
     private String password;
     private String role;
     private LocalDateTime createdOn;
+    private LocalDateTime updatedOn;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Address> addresses;

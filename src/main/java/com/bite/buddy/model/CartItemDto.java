@@ -6,10 +6,9 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class CartItemDto {
 
-    private String cartItemId;
+    private String cartItemIdentifier;
     private String cartId;
     private String menuId;
     private int quantity;
