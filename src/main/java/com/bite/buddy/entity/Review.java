@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -33,6 +35,9 @@ public class Review {
     private Integer rating;
     private String comment;
 
-    // Getters & Setters
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
 }
 

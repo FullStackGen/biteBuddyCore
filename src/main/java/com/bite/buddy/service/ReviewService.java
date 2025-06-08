@@ -11,7 +11,7 @@ public interface ReviewService {
 
     ReviewDto updateReview(Map<String, Object> requestMap);
 
-    List<ReviewDto> getReviewsByRestaurant(Map<String, Object> requestMap);
+    List<ReviewDto> getReviewsByKey(Map<String, Object> requestMap);
 
     void deleteReview(Map<String, Object> requestMap);
 }

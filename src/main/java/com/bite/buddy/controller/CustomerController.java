@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/biteBuddy")
+@RequestMapping("/biteBuddy/customer")
 public class CustomerController {
 
     @Autowired
@@ -31,49 +31,7 @@ public class CustomerController {
     @Autowired
     private CartService cartService;
 
-    // POST
-    @PostMapping("/auth/user/register")
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
-        Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("user", userDto);
-        UserDto createdUserDto = this.userService.registerUser(requestMap);
-        return new ResponseEntity<>(createdUserDto, HttpStatus.CREATED);
-    }
-
-    // PUT
-    @PutMapping("/customer/user/modify/{userId}")
-    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable String userId) {
-        Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("user", userDto);
-        requestMap.put("userId", userId);
-        UserDto updatedUserDto = this.userService.updateUser(requestMap);
-        return new ResponseEntity<>(updatedUserDto, HttpStatus.OK);
-    }
-
-    // DELETE
-    @DeleteMapping("/customer/user/delete/{userId}")
-    public ResponseEntity<ApiResponse> deleteUser(@PathVariable String userId) {
-        Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("userId", userId);
-        this.userService.deleteUser(requestMap);
-        return ResponseEntity.ok(new ApiResponse("User deleted successfully", true));
-    }
-
-    // GET
-    @GetMapping("/admin/user/search")
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        return ResponseEntity.ok(this.userService.getAllUsers());
-    }
-
-    // GET
-    @GetMapping("/customer/user/search/{userId}")
-    public ResponseEntity<UserDto> getUser(@PathVariable("userId") String uid) {
-        Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("userId", uid);
-        return ResponseEntity.ok(this.userService.getUser(requestMap));
-    }
-
-    @PostMapping("/customer/user/address/add")
+    @PostMapping("/addresses")
     public ResponseEntity<AddressDto> addAddress(@Valid @RequestBody AddressDto addressDto) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("address", addressDto);
@@ -81,7 +39,7 @@ public class CustomerController {
         return new ResponseEntity<>(addedAddressDto, HttpStatus.CREATED);
     }
 
-    @PutMapping("/customer/user/address/modify/{addressId}")
+    @PutMapping("/addresses/{addressId}")
     public ResponseEntity<AddressDto> updateAddress(@Valid @RequestBody AddressDto addressDto, @PathVariable String addressId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("address", addressDto);
@@ -90,7 +48,7 @@ public class CustomerController {
         return new ResponseEntity<>(updatedAddressDto, HttpStatus.OK);
     }
 
-    @DeleteMapping("/customer/user/address/delete/{addressId}")
+    @DeleteMapping("/addresses/{addressId}")
     public ResponseEntity<ApiResponse> deleteAddress(@PathVariable String addressId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("addressId", addressId);
@@ -98,14 +56,14 @@ public class CustomerController {
         return ResponseEntity.ok(new ApiResponse("Address deleted successfully", true));
     }
 
-    @GetMapping("/customer/user/address/search/{userId}")
-    public ResponseEntity<List<AddressDto>> getAllAddresses(@PathVariable("userId") String userId) {
+    @GetMapping("/users/{userId}/addresses")
+    public ResponseEntity<List<AddressDto>> getAddressesByUser(@PathVariable("userId") String userId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("userId", userId);
-        return ResponseEntity.ok(this.addressService.getAllAddress(requestMap));
+        return ResponseEntity.ok(this.addressService.getAddressesByUser(requestMap));
     }
 
-    @PostMapping("/customer/review/add")
+    @PostMapping("/reviews")
     public ResponseEntity<ReviewDto> addReview(@Valid @RequestBody ReviewDto reviewDto) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("review", reviewDto);
@@ -113,8 +71,7 @@ public class CustomerController {
         return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
     }
 
-    // PUT
-    @PutMapping("/customer/review/modify/{reviewId}")
+    @PutMapping("/reviews/{reviewId}")
     public ResponseEntity<ReviewDto> updateReview(@Valid @RequestBody ReviewDto reviewDto, @PathVariable String reviewId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("review", reviewDto);
@@ -123,8 +80,7 @@ public class CustomerController {
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 
-    // DELETE
-    @DeleteMapping("/customer/review/delete/{reviewId}")
+    @DeleteMapping("/reviews/{reviewId}")
     public ResponseEntity<ApiResponse> deleteReview(@PathVariable String reviewId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("reviewId", reviewId);
@@ -132,15 +88,22 @@ public class CustomerController {
         return ResponseEntity.ok(new ApiResponse("Review deleted successfully", true));
     }
 
-    // GET
-    @GetMapping("/customer/review/search/{restaurantId}")
-    public ResponseEntity<List<ReviewDto>> getAllReviewByRestaurant(@PathVariable("restaurantId") String restaurantId) {
+    @GetMapping("/reviews")
+    public ResponseEntity<?> getAllReviewByKey(
+            @RequestParam(value = "restaurantId", required = false) String restaurantId,
+            @RequestParam(value = "userId", required = false) String userId) {
+
+        if (restaurantId == null && userId == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "At least one should be not null"));
+        }
+
         Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("restaurantId", restaurantId);
-        return ResponseEntity.ok(this.reviewService.getReviewsByRestaurant(requestMap));
+        if (restaurantId != null) requestMap.put("restaurantId", restaurantId);
+        if (userId != null) requestMap.put("userId", userId);
+        return ResponseEntity.ok(this.reviewService.getReviewsByKey(requestMap));
     }
 
-    @PostMapping("/customer/cart/add")
+    @PostMapping("/carts")
     public ResponseEntity<CartDto> addCart(@Valid @RequestBody CartDto cartDto) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("cart", cartDto);
@@ -148,8 +111,7 @@ public class CustomerController {
         return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
     }
 
-    // PUT
-    @PutMapping("/customer/cart/modify/{cartId}")
+    @PutMapping("/carts/{cartId}")
     public ResponseEntity<CartDto> updateCart(@Valid @RequestBody CartDto cartDto, @PathVariable String cartId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("cart", cartDto);
@@ -158,8 +120,7 @@ public class CustomerController {
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 
-    // DELETE
-    @DeleteMapping("/customer/cart/delete/{cartId}")
+    @DeleteMapping("/carts/{cartId}")
     public ResponseEntity<ApiResponse> deleteCart(@PathVariable String cartId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("cartId", cartId);
@@ -167,15 +128,14 @@ public class CustomerController {
         return ResponseEntity.ok(new ApiResponse("Cart deleted successfully", true));
     }
 
-    // GET
-    @GetMapping("/customer/cart/search/{userId}")
+    @GetMapping("/users/{userId}/carts")
     public ResponseEntity<List<CartDto>> getAllCartsByUser(@PathVariable("userId") String userId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("userId", userId);
         return ResponseEntity.ok(this.cartService.getCartsByUser(requestMap));
     }
 
-    @PostMapping("/customer/cart-item/add")
+    @PostMapping("/cart-items")
     public ResponseEntity<CartItemDto> addCartItem(@Valid @RequestBody CartItemDto cartItemDto) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("cartItem", cartItemDto);
@@ -183,8 +143,7 @@ public class CustomerController {
         return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
     }
 
-    // PUT
-    @PutMapping("/customer/cart-item/modify/{cartItemId}")
+    @PutMapping("/cart-items/{cartItemId}")
     public ResponseEntity<CartItemDto> updateCartItem(@Valid @RequestBody CartItemDto cartItemDto, @PathVariable String cartItemId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("cartItem", cartItemDto);
@@ -193,8 +152,7 @@ public class CustomerController {
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 
-    // DELETE
-    @DeleteMapping("/customer/cart-item/delete/{cartItemId}")
+    @DeleteMapping("/cart-items/{cartItemId}")
     public ResponseEntity<ApiResponse> deleteCartItem(@PathVariable String cartItemId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("cartItemId", cartItemId);
@@ -202,8 +160,7 @@ public class CustomerController {
         return ResponseEntity.ok(new ApiResponse("CartItem deleted successfully", true));
     }
 
-    // GET
-    @GetMapping("/customer/cart-item/search/{cartId}")
+    @GetMapping("/carts/{cartId}/cart-items")
     public ResponseEntity<List<CartItemDto>> getAllCartItemsByCart(@PathVariable("cartId") String cartId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("cartId", cartId);

@@ -9,6 +9,10 @@ import com.bite.buddy.repository.UserRepo;
 import com.bite.buddy.service.AddressService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,12 +28,15 @@ public class AddressServiceImpl implements AddressService {
     AddressRepo addressRepo;
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private CacheManager cacheManager;
 
     public AddressServiceImpl(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 
     @Override
+    @CacheEvict(value = "addressesByUser", key = "#requestMap['address'].userId")
     public AddressDto addAddress(Map<String, Object> requestMap) {
         AddressDto addressDto = (AddressDto) requestMap.get("address");
         String userId = addressDto.getUserId();
@@ -45,6 +52,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
+    @CacheEvict(value = "addressesByUser", key = "#requestMap['address'].userId")
     public AddressDto updateAddress(Map<String, Object> requestMap) {
         AddressDto addressDto = (AddressDto) requestMap.get("address");
         String addressId = requestMap.get("addressId").toString();
@@ -59,7 +67,8 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public List<AddressDto> getAllAddress(Map<String, Object> requestMap) {
+    @Cacheable(value = "addressesByUser", key = "#requestMap['userId']")
+    public List<AddressDto> getAddressesByUser(Map<String, Object> requestMap) {
         String userId = requestMap.get("userId").toString();
         List<Address> addresses = this.addressRepo.findByUser_UserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Address", "id", userId));
@@ -71,6 +80,11 @@ public class AddressServiceImpl implements AddressService {
         String addressId = requestMap.get("addressId").toString();
         Address address = this.addressRepo.findByAddressId(addressId)
                 .orElseThrow(() -> new ResourceNotFoundException("Address", "id", addressId));
+        String userId = address.getUser().getUserId();
+        Cache cache = cacheManager.getCache("addressesByUser");
+        if (cache != null) {
+            cache.evict(userId);
+        }
         this.addressRepo.delete(address);
     }
 }

@@ -14,5 +14,7 @@ public interface MenuService {
     List<MenuDto> getMenuByRestaurant(Map<String, Object> requestMap);
 
     void deleteMenuItem(Map<String, Object> requestMap);
+
+    MenuDto getMenuById(Map<String, Object> requestMap);
 }
 

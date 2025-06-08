@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/biteBuddy")
+@RequestMapping("/biteBuddy/admin")
 public class AdminController {
 
     @Autowired
@@ -25,7 +25,7 @@ public class AdminController {
     @Autowired
     private MenuService menuService;
 
-    @PostMapping("/admin/restaurant/add")
+    @PostMapping("/restaurants")
     public ResponseEntity<RestaurantDto> addRestaurant(@Valid @RequestBody RestaurantDto restaurantDto) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("restaurant", restaurantDto);
@@ -33,8 +33,7 @@ public class AdminController {
         return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
     }
 
-    // PUT
-    @PutMapping("/admin/restaurant/modify/{restaurantId}")
+    @PutMapping("/restaurants/{restaurantId}")
     public ResponseEntity<RestaurantDto> updateRestaurant(@Valid @RequestBody RestaurantDto restaurantDto, @PathVariable String restaurantId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("restaurant", restaurantDto);
@@ -43,8 +42,7 @@ public class AdminController {
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 
-    // DELETE
-    @DeleteMapping("/admin/restaurant/delete/{restaurantId}")
+    @DeleteMapping("/restaurants/{restaurantId}")
     public ResponseEntity<ApiResponse> deleteRestaurant(@PathVariable String restaurantId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("restaurantId", restaurantId);
@@ -52,21 +50,26 @@ public class AdminController {
         return ResponseEntity.ok(new ApiResponse("Restaurant deleted successfully", true));
     }
 
-    // GET
-    @GetMapping("/admin/restaurant/search")
-    public ResponseEntity<List<RestaurantDto>> getAllRestaurants() {
-        return ResponseEntity.ok(this.restaurantService.getAllRestaurants());
-    }
+//    @GetMapping("restaurants")
+//    public ResponseEntity<List<RestaurantDto>> getAllRestaurants() {
+//        return ResponseEntity.ok(this.restaurantService.getAllRestaurants());
+//    }
 
-    // GET
-    @GetMapping("/admin/restaurant/search/{restaurantId}")
+    @GetMapping("/restaurants/{restaurantId}")
     public ResponseEntity<RestaurantDto> getRestaurant(@PathVariable("restaurantId") String restaurantId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("restaurantId", restaurantId);
         return ResponseEntity.ok(this.restaurantService.getRestaurantById(requestMap));
     }
 
-    @PostMapping("/admin/restaurant/menu/add")
+    @GetMapping("/restaurants")
+    public ResponseEntity<List<RestaurantDto>> getAllRestaurantByState(@RequestParam("state") String state) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("state", state);
+        return ResponseEntity.ok(this.restaurantService.getRestaurantsByState(requestMap));
+    }
+
+    @PostMapping("/menus")
     public ResponseEntity<MenuDto> addMenu(@Valid @RequestBody MenuDto menuDto) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("menu", menuDto);
@@ -74,8 +77,7 @@ public class AdminController {
         return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
     }
 
-    // PUT
-    @PutMapping("/admin/restaurant/menu/modify/{menuId}")
+    @PutMapping("/menus/{menuId}")
     public ResponseEntity<MenuDto> updateMenu(@Valid @RequestBody MenuDto menuDto, @PathVariable String menuId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("menu", menuDto);
@@ -84,8 +86,7 @@ public class AdminController {
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 
-    // DELETE
-    @DeleteMapping("/admin/restaurant/menu/delete/{menuId}")
+    @DeleteMapping("/menus/{menuId}")
     public ResponseEntity<ApiResponse> deleteMenu(@PathVariable String menuId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("menuId", menuId);
@@ -93,18 +94,17 @@ public class AdminController {
         return ResponseEntity.ok(new ApiResponse("Menu deleted successfully", true));
     }
 
-    // GET
-    @GetMapping("/admin/restaurant/menu/search/{restaurantId}")
+    @GetMapping("/restaurants/{restaurantId}/menus")
     public ResponseEntity<List<MenuDto>> getAllMenuByRestaurant(@PathVariable("restaurantId") String restaurantId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("restaurantId", restaurantId);
         return ResponseEntity.ok(this.menuService.getMenuByRestaurant(requestMap));
     }
 
-    @GetMapping("/admin/restaurant/search/state/{state}")
-    public ResponseEntity<List<RestaurantDto>> getAllRestaurantByState(@PathVariable("state") String state) {
+    @GetMapping("/menus/{menuId}")
+    public ResponseEntity<MenuDto> getAllMenuById(@PathVariable("menuId") String menuId) {
         Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("state", state);
-        return ResponseEntity.ok(this.restaurantService.getRestaurantsByState(requestMap));
+        requestMap.put("menuId", menuId);
+        return ResponseEntity.ok(this.menuService.getMenuById(requestMap));
     }
 }

@@ -9,7 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -92,7 +91,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Cacheable(value = "restaurantsByState", key = "#requestMap['state']")
     public List<RestaurantDto> getRestaurantsByState(Map<String, Object> requestMap) {
         String state = requestMap.get("state").toString();
-        List<Restaurant> entities =  restaurantRepo.findByState(state)
+        List<Restaurant> entities = restaurantRepo.findByState(state)
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurant", "state", state));
         return entities.stream()
                 .map(r -> modelMapper.map(r, RestaurantDto.class))

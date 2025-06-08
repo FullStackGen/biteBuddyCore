@@ -83,4 +83,12 @@ public class MenuServiceImpl implements MenuService {
             cache.evict(restaurantId);
         }
     }
+
+    @Override
+    public MenuDto getMenuById(Map<String, Object> requestMap) {
+        String id = requestMap.get("menuId").toString();
+        Menu entity = menuRepo.findByMenuId(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Menu", "id", id));
+        return modelMapper.map(entity, MenuDto.class);
+    }
 }

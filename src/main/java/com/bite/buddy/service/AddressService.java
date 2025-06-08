@@ -11,7 +11,7 @@ public interface AddressService {
 
     AddressDto updateAddress(Map<String, Object> requestMap);
 
-    List<AddressDto> getAllAddress(Map<String, Object> requestMap);
+    List<AddressDto> getAddressesByUser(Map<String, Object> requestMap);
 
     void deleteAddress(Map<String, Object> requestMap);
 }
