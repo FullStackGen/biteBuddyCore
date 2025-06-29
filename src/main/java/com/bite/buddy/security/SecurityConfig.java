@@ -52,6 +52,7 @@ public class SecurityConfig {
                         .requestMatchers("/biteBuddy/auth/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/customer/**").hasRole("CUSTOMER")
+                        .requestMatchers("/api/payment/webhook").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

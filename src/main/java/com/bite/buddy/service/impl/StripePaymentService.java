@@ -39,6 +39,7 @@ public class StripePaymentService {
                                 )
                                 .build()
                 )
+                .putMetadata("orderId", orderId)
                 .build();
 
         Session session = Session.create(params);

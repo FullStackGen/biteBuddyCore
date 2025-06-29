@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("/biteBuddy/customer/payment")
+@RequestMapping("/api/payment")
 public class PaymentWebhookController {
 
     @Value("${stripe.webhook.secret}")
@@ -35,19 +37,26 @@ public class PaymentWebhookController {
         }
 
         if ("checkout.session.completed".equals(event.getType())) {
-            Session session = (Session) event.getDataObjectDeserializer().getObject().get();
-            String orderId = session.getMetadata().get("orderId"); // If you used metadata
+            Session session = (Session) event.getDataObjectDeserializer()
+                    .getObject()
+                    .orElseThrow(() -> new RuntimeException("Session object not deserialized"));
+
+            Map<String, String> metadata = session.getMetadata();
+            if (metadata == null || !metadata.containsKey("orderId")) {
+                throw new RuntimeException("Order ID metadata missing in session");
+            }
+
+            String orderId = metadata.get("orderId");
 
             Order order = orderRepo.findByOrderId(orderId)
-                    .orElseThrow(() -> new RuntimeException("Order not found"));
+                    .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
 
-            // Update payment status
             Payment payment = paymentRepo.findByOrder_OrderId(orderId)
-                    .orElseThrow(() -> new RuntimeException("Payment not found"));
+                    .orElseThrow(() -> new RuntimeException("Payment not found for order ID: " + orderId));
+
             payment.setStatus(ApplicationConstant.PaymentStatus.SUCCESS);
             paymentRepo.save(payment);
 
-            // Update order status
             order.setStatus(ApplicationConstant.OrderStatus.CONFIRMED);
             orderRepo.save(order);
         }
