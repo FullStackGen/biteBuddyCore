@@ -38,7 +38,7 @@
 									"pm.variables.set(\"user\",user)\r",
 									"var userEmail = user + \"@gmail.com\"\r",
 									"pm.variables.set(\"userEmail\",userEmail)\r",
-									"var phoneNumber = \"+91 \" + generateRandom10DigitNumber();\r",
+									"var phoneNumber = \"+91\" + generateRandom10DigitNumber();\r",
 									"pm.variables.set(\"phoneNumber\",phoneNumber)\r",
 									"var userPassword = user + \"@1In\"\r",
 									"pm.variables.set(\"userPassword\",userPassword)\r",
@@ -197,7 +197,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"ZixcB@gmail.com\",\r\n    \"password\":\"ZixcB@1In\"\r\n}\r\n\r\n// {\r\n//     \"email\":\"EBuNf@gmail.com\",\r\n//     \"password\":\"EBuNf@1In\"\r\n// }",
+							"raw": "{\r\n    \"email\":\"hfJvt@gmail.com\",\r\n    \"password\":\"hfJvt@1In\"\r\n}\r\n\r\n// {\r\n//     \"email\":\"EBuNf@gmail.com\",\r\n//     \"password\":\"EBuNf@1In\"\r\n// }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -236,7 +236,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"crGNE@gmail.com\",\r\n    \"password\":\"crGNE@1In\"\r\n}\r\n\r\n// {\r\n//     \"email\":\"zAuoX@gmail.com\",\r\n//     \"password\":\"zAuoX@1In\"\r\n// }",
+							"raw": "// {\r\n//     \"email\":\"crGNE@gmail.com\",\r\n//     \"password\":\"crGNE@1In\"\r\n// }\r\n\r\n{\r\n    \"email\":\"hfJvt@gmail.com\",\r\n    \"password\":\"hfJvt@1In\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -567,7 +567,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"description\":\"{{address}}\",\r\n    \"itemName\":\"{{user}}\",\r\n    \"price\":99,\r\n    \"category\":\"veg\",\r\n    \"isAvailable\":\"Y\",\r\n    \"restaurantId\":\"EA.8184859676279801428\"\r\n}",
+							"raw": "{\r\n    \"description\":\"{{address}}\",\r\n    \"itemName\":\"{{user}}\",\r\n    \"price\":99,\r\n    \"category\":\"veg\",\r\n    \"isAvailable\":\"Y\",\r\n    \"restaurantId\":\"EA.146215039944227746\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -996,7 +996,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"city\": \"Bangalore\",\r\n  \"zip\": \"560001\",\r\n  \"state\": \"Karnataka\",\r\n  \"locality\": \"MG Road\",\r\n  \"userId\": \"US.3738513005666796492\",\r\n  \"defaultAddress\": true\r\n}",
+							"raw": "{\r\n  \"city\": \"Bangalore\",\r\n  \"zip\": \"560001\",\r\n  \"state\": \"Karnataka\",\r\n  \"locality\": \"MG Road\",\r\n  \"userId\": \"US.4758920403070878118\",\r\n  \"defaultAddress\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1511,6 +1511,389 @@
 								"carts",
 								"234567",
 								"cart-items"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "create order",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"generateRandomString = (length) => {\r",
+									"  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\r",
+									"  let result = '';\r",
+									"\r",
+									"  for (let i = 0; i < length; i++) {\r",
+									"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
+									"    result += characters.charAt(randomIndex);\r",
+									"  }\r",
+									"\r",
+									"  return result;\r",
+									"}\r",
+									"\r",
+									"var commentContent = generateRandomString(10)\r",
+									"pm.variables.set(\"commentContent\",commentContent)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\":\"US.6666002249360043842\",\r\n    \"restaurantId\":\"EA.146215039944227746\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/customer/orders",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modify order status",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"generateRandomString = (length) => {\r",
+									"  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\r",
+									"  let result = '';\r",
+									"\r",
+									"  for (let i = 0; i < length; i++) {\r",
+									"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
+									"    result += characters.charAt(randomIndex);\r",
+									"  }\r",
+									"\r",
+									"  return result;\r",
+									"}\r",
+									"\r",
+									"var commentContent = generateRandomString(10)\r",
+									"pm.variables.set(\"commentContent\",commentContent)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\":\"PENDING_PAYMENT\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/customer/orders/OR.3613321707165776881",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"orders",
+								"OR.3613321707165776881"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cancel order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/customer/orders/OR.7343652717837025096",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"orders",
+								"OR.7343652717837025096"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "order by user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/customer/users/US.6666002249360043842/orders",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"users",
+								"US.6666002249360043842",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order Item",
+			"item": [
+				{
+					"name": "add order item",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"generateRandomString = (length) => {\r",
+									"  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\r",
+									"  let result = '';\r",
+									"\r",
+									"  for (let i = 0; i < length; i++) {\r",
+									"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
+									"    result += characters.charAt(randomIndex);\r",
+									"  }\r",
+									"\r",
+									"  return result;\r",
+									"}\r",
+									"\r",
+									"var commentContent = generateRandomString(10)\r",
+									"pm.variables.set(\"commentContent\",commentContent)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orderId\":\"OR.3613321707165776881\",\r\n    \"menuId\":\"ME.1537140473909039538\",\r\n    \"quantity\":5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/customer/order-items",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"order-items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "order item by order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/customer/orders/OR.3854819985121959141/order-items",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"orders",
+								"OR.3854819985121959141",
+								"order-items"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment",
+			"item": [
+				{
+					"name": "initiate payment",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"generateRandomString = (length) => {\r",
+									"  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\r",
+									"  let result = '';\r",
+									"\r",
+									"  for (let i = 0; i < length; i++) {\r",
+									"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
+									"    result += characters.charAt(randomIndex);\r",
+									"  }\r",
+									"\r",
+									"  return result;\r",
+									"}\r",
+									"\r",
+									"var commentContent = generateRandomString(10)\r",
+									"pm.variables.set(\"commentContent\",commentContent)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orderId\":\"OR.3613321707165776881\",\r\n    \"amount\":495\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/customer/payments",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/customer/orders/OR.3854819985121959141/order-items",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customer",
+								"orders",
+								"OR.3854819985121959141",
+								"order-items"
 							]
 						}
 					},
