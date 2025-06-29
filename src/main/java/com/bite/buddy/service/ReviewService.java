@@ -15,4 +15,3 @@ public interface ReviewService {
 
     void deleteReview(Map<String, Object> requestMap);
 }
-

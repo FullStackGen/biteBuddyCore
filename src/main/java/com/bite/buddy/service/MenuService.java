@@ -17,4 +17,3 @@ public interface MenuService {
 
     MenuDto getMenuById(Map<String, Object> requestMap);
 }
-

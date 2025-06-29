@@ -60,13 +60,6 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public List<RestaurantDto> getAllRestaurants() {
-        return restaurantRepo.findAll().stream()
-                .map(r -> modelMapper.map(r, RestaurantDto.class))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public void deleteRestaurant(Map<String, Object> requestMap) {
         String id = requestMap.get("restaurantId").toString();
         Restaurant entity = restaurantRepo.findByRestaurantId(id)

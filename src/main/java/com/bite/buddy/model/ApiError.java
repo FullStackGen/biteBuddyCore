@@ -9,6 +9,7 @@ import java.util.Map;
 @Getter
 @Setter
 public class ApiError {
+
     private LocalDateTime timestamp;
     private String message;
     private String details;

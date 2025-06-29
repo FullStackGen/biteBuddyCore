@@ -20,4 +20,3 @@ public class CartDto {
     private LocalDateTime updatedAt;
     private List<CartItemDto> cartItems;
 }
-

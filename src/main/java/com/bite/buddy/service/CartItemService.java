@@ -15,4 +15,3 @@ public interface CartItemService {
 
     void deleteCartItem(Map<String, Object> requestMap);
 }
-

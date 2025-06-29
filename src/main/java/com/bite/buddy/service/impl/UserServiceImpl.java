@@ -16,8 +16,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -88,12 +90,6 @@ public class UserServiceImpl implements UserService {
         User user = this.userRepo.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
         return this.userToDto(user);
-    }
-
-    @Override
-    public List<UserDto> getAllUsers() {
-        List<User> users = this.userRepo.findAll();
-        return users.stream().map(user -> this.userToDto(user)).collect(Collectors.toList());
     }
 
     @Override

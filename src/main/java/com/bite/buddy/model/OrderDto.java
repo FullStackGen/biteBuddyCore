@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class OrderDto {
+
     private String orderId;
     private String userId;
     private String restaurantId;
@@ -16,4 +17,3 @@ public class OrderDto {
     private ApplicationConstant.OrderStatus status;
     private LocalDateTime timestamp;
 }
-

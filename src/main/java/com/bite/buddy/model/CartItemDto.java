@@ -17,4 +17,3 @@ public class CartItemDto {
     private int quantity;
     private String notes;
 }
-

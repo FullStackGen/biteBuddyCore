@@ -79,12 +79,6 @@ public class AuthController {
         return ResponseEntity.ok(new ApiResponse("User deleted successfully", true));
     }
 
-    // GET
-//    @GetMapping("/admin/user/search")
-//    public ResponseEntity<List<UserDto>> getAllUsers() {
-//        return ResponseEntity.ok(this.userService.getAllUsers());
-//    }
-
     @GetMapping("/users/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable("userId") String uid) {
         Map<String, Object> requestMap = new HashMap<>();

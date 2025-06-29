@@ -16,4 +16,3 @@ public class ReviewDto implements Serializable {
     private Integer rating;
     private String comment;
 }
-

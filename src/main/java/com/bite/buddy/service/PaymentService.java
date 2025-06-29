@@ -7,5 +7,4 @@ public interface PaymentService {
     String initiatePayment(Map<String, Object> requestMap);
 
     boolean verifyPayment(Map<String, Object> requestMap);
-
 }

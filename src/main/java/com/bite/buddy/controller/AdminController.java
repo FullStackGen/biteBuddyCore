@@ -50,11 +50,6 @@ public class AdminController {
         return ResponseEntity.ok(new ApiResponse("Restaurant deleted successfully", true));
     }
 
-//    @GetMapping("restaurants")
-//    public ResponseEntity<List<RestaurantDto>> getAllRestaurants() {
-//        return ResponseEntity.ok(this.restaurantService.getAllRestaurants());
-//    }
-
     @GetMapping("/restaurants/{restaurantId}")
     public ResponseEntity<RestaurantDto> getRestaurant(@PathVariable("restaurantId") String restaurantId) {
         Map<String, Object> requestMap = new HashMap<>();

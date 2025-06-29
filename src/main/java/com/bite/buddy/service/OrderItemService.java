@@ -10,5 +10,4 @@ public interface OrderItemService {
     OrderItemDto addOrderItem(Map<String, Object> requestMap);
 
     List<OrderItemDto> getItemsByOrder(Map<String, Object> requestMap);
-
 }

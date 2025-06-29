@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReviewRepo extends JpaRepository<Review, String> {
+
     Optional<List<Review>> findByRestaurant_RestaurantId(String restaurantId);
 
     Optional<List<Review>> findByUser_UserId(String userId);
