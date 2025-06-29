@@ -1,5 +1,6 @@
 package com.bite.buddy.entity;
 
+import com.bite.buddy.configuration.ApplicationConstant.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,9 @@ public class Order {
     private Restaurant restaurant;
 
     private Double totalPrice;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     private LocalDateTime timestamp;
 

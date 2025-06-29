@@ -2,20 +2,21 @@ package com.bite.buddy.service.impl;
 
 import com.bite.buddy.entity.User;
 import com.bite.buddy.exceptions.ResourceNotFoundException;
+import com.bite.buddy.exceptions.ResourceNotUniqueException;
+import com.bite.buddy.kafka.NotificationEvent;
+import com.bite.buddy.kafka.NotificationProducer;
 import com.bite.buddy.model.UserDto;
 import com.bite.buddy.repository.UserRepo;
 import com.bite.buddy.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +25,11 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private NotificationProducer notificationProducer;
+
+    @Value("${notification.enable}")
+    private String notificationFlag;
 
     public UserServiceImpl(ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
         this.modelMapper = modelMapper;
@@ -33,6 +39,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto registerUser(Map<String, Object> requestMap) {
         UserDto userDto = (UserDto) requestMap.get("user");
+        Optional<User> uniqueUser = this.userRepo.findByEmail(userDto.getEmail());
+        if (uniqueUser.isPresent()) throw new ResourceNotUniqueException("User", "email", userDto.getEmail());
         User user = this.dtoToUser(userDto);
         UUID id = UUID.randomUUID();
         long n = (id.getLeastSignificantBits() ^ id.getMostSignificantBits()) & Long.MAX_VALUE;
@@ -44,6 +52,17 @@ public class UserServiceImpl implements UserService {
                 .toLocalDateTime();
         user.setCreatedOn(localDateTime);
         User savedUser = userRepo.save(user);
+        if (notificationFlag.equals("true")) {
+            NotificationEvent event = NotificationEvent.builder()
+                    .eventType("USER_REGISTERED")
+                    .name(user.getName())
+                    .email(user.getEmail())
+                    .mobileNumber(user.getPhoneNumber())
+                    .message("User #" + user.getName() + " is registered successfully!")
+                    .build();
+
+            notificationProducer.sendNotification("users-notifications", event);
+        }
         return this.modelMapper.map(savedUser, UserDto.class);
     }
 

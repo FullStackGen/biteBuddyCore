@@ -9,10 +9,6 @@ public interface OrderItemService {
 
     OrderItemDto addOrderItem(Map<String, Object> requestMap);
 
-    OrderItemDto updateOrderItem(Map<String, Object> requestMap);
-
     List<OrderItemDto> getItemsByOrder(Map<String, Object> requestMap);
 
-    void deleteOrderItem(Map<String, Object> requestMap);
 }
-

@@ -1,5 +1,6 @@
 package com.bite.buddy.service.impl;
 
+import com.bite.buddy.configuration.ApplicationConstant.OrderStatus;
 import com.bite.buddy.entity.Order;
 import com.bite.buddy.entity.Restaurant;
 import com.bite.buddy.entity.User;
@@ -38,8 +39,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto createOrder(Map<String, Object> requestMap) {
         OrderDto dto = (OrderDto) requestMap.get("order");
-        String userId = requestMap.get("userId").toString();
-        String restaurantId = requestMap.get("restaurantId").toString();
+        String userId = dto.getUserId();
+        String restaurantId = dto.getRestaurantId();
         User user = userRepo.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
         Restaurant restaurant = restaurantRepo.findByRestaurantId(restaurantId)
@@ -55,16 +56,18 @@ public class OrderServiceImpl implements OrderService {
         UUID id = UUID.randomUUID();
         long n = (id.getLeastSignificantBits() ^ id.getMostSignificantBits()) & Long.MAX_VALUE;
         order.setOrderId("OR." + n);
+        order.setStatus(OrderStatus.PENDING);
+        order.setTotalPrice((double) 0);
         return modelMapper.map(orderRepo.save(order), OrderDto.class);
     }
 
     @Override
     public OrderDto updateOrderStatus(Map<String, Object> requestMap) {
         String orderId = requestMap.get("orderId").toString();
-        String status = requestMap.get("status").toString();
+        OrderDto dto = (OrderDto) requestMap.get("order");
         Order order = orderRepo.findByOrderId(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "id", orderId));
-        order.setStatus(status);
+        order.setStatus(dto.getStatus());
         return modelMapper.map(orderRepo.save(order), OrderDto.class);
     }
 
@@ -79,11 +82,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void cancelOrder(Map<String, Object> requestMap) {
+    public OrderDto cancelOrder(Map<String, Object> requestMap) {
         String orderId = requestMap.get("orderId").toString();
         Order order = orderRepo.findByOrderId(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "id", orderId));
-        orderRepo.delete(order);
+        order.setStatus(OrderStatus.CANCELLED);
+        return modelMapper.map(orderRepo.save(order), OrderDto.class);
     }
 }
 

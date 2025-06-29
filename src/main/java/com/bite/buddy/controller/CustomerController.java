@@ -31,6 +31,15 @@ public class CustomerController {
     @Autowired
     private CartService cartService;
 
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private OrderItemService orderItemService;
+
+    @Autowired
+    private PaymentService paymentService;
+
     @PostMapping("/addresses")
     public ResponseEntity<AddressDto> addAddress(@Valid @RequestBody AddressDto addressDto) {
         Map<String, Object> requestMap = new HashMap<>();
@@ -165,5 +174,61 @@ public class CustomerController {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("cartId", cartId);
         return ResponseEntity.ok(this.cartItemService.getItemsByCart(requestMap));
+    }
+
+    @PostMapping("/orders")
+    public ResponseEntity<OrderDto> createOrder(@Valid @RequestBody OrderDto orderDto) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("order", orderDto);
+        OrderDto createdDto = this.orderService.createOrder(requestMap);
+        return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/orders/{orderId}")
+    public ResponseEntity<OrderDto> updateOrder(@Valid @RequestBody OrderDto orderDto, @PathVariable String orderId) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("order", orderDto);
+        requestMap.put("orderId", orderId);
+        OrderDto updatedDto = this.orderService.updateOrderStatus(requestMap);
+        return new ResponseEntity<>(updatedDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/orders/{orderId}")
+    public ResponseEntity<OrderDto> cancelOrder(@PathVariable String orderId) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("orderId", orderId);
+        OrderDto updatedDto = this.orderService.cancelOrder(requestMap);
+        return new ResponseEntity<>(updatedDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/users/{userId}/orders")
+    public ResponseEntity<List<OrderDto>> getAllOrdersByUser(@PathVariable("userId") String userId) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("userId", userId);
+        return ResponseEntity.ok(this.orderService.getOrdersByUser(requestMap));
+    }
+
+    @PostMapping("/order-items")
+    public ResponseEntity<OrderItemDto> addOrderItem(@Valid @RequestBody OrderItemDto orderItemDto) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("orderItem", orderItemDto);
+        OrderItemDto createdDto = this.orderItemService.addOrderItem(requestMap);
+        return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/orders/{orderId}/order-items")
+    public ResponseEntity<List<OrderItemDto>> getAllOrderItemsByOrder(@PathVariable("orderId") String orderId) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("orderId", orderId);
+        return ResponseEntity.ok(this.orderItemService.getItemsByOrder(requestMap));
+    }
+
+    @PostMapping("/payments")
+    public ResponseEntity<String> initiatePayment(@Valid @RequestBody PaymentDto paymentDto) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("paymentDto", paymentDto);
+        requestMap.put("orderId", paymentDto.getOrderId());
+        String redirectUrl = this.paymentService.initiatePayment(requestMap);
+        return new ResponseEntity<>(redirectUrl, HttpStatus.CREATED);
     }
 }

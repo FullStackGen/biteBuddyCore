@@ -1,5 +1,6 @@
 package com.bite.buddy.model;
 
+import com.bite.buddy.configuration.ApplicationConstant;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +13,7 @@ public class OrderDto {
     private String userId;
     private String restaurantId;
     private Double totalPrice;
-    private String status;
+    private ApplicationConstant.OrderStatus status;
     private LocalDateTime timestamp;
 }
 

@@ -36,8 +36,8 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     public OrderItemDto addOrderItem(Map<String, Object> requestMap) {
         OrderItemDto dto = (OrderItemDto) requestMap.get("orderItem");
-        String orderId = requestMap.get("orderId").toString();
-        String menuItemId = requestMap.get("menuItemId").toString();
+        String orderId = dto.getOrderId();
+        String menuItemId = dto.getMenuId();
         Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "id", orderId));
         Menu menu = menuRepo.findById(menuItemId)
@@ -47,17 +47,10 @@ public class OrderItemServiceImpl implements OrderItemService {
         orderItem.setMenuItem(menu);
         UUID id = UUID.randomUUID();
         long n = (id.getLeastSignificantBits() ^ id.getMostSignificantBits()) & Long.MAX_VALUE;
-        orderItem.setOrderItemId("IT." + n);
-        return modelMapper.map(orderItemRepo.save(orderItem), OrderItemDto.class);
-    }
-
-    @Override
-    public OrderItemDto updateOrderItem(Map<String, Object> requestMap) {
-        String orderItemId = requestMap.get("orderItemId").toString();
-        OrderItemDto dto = (OrderItemDto) requestMap.get("orderItem");
-        OrderItem orderItem = orderItemRepo.findByOrderItemId(orderItemId)
-                .orElseThrow(() -> new ResourceNotFoundException("OrderItem", "id", orderItemId));
-        modelMapper.map(dto, orderItem);
+        orderItem.setOrderItemIdentifier("IT." + n);
+        double total = order.getTotalPrice() + orderItem.getQuantity() * orderItem.getMenuItem().getPrice();
+        order.setTotalPrice(total);
+        orderRepo.save(order);
         return modelMapper.map(orderItemRepo.save(orderItem), OrderItemDto.class);
     }
 
@@ -70,13 +63,4 @@ public class OrderItemServiceImpl implements OrderItemService {
                 .map(orderItem -> modelMapper.map(orderItem, OrderItemDto.class))
                 .collect(Collectors.toList());
     }
-
-    @Override
-    public void deleteOrderItem(Map<String, Object> requestMap) {
-        String orderItemId = requestMap.get("orderItemId").toString();
-        OrderItem orderItem = orderItemRepo.findByOrderItemId(orderItemId)
-                .orElseThrow(() -> new ResourceNotFoundException("OrderItem", "id", orderItemId));
-        orderItemRepo.delete(orderItem);
-    }
 }
-

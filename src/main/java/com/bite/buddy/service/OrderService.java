@@ -13,6 +13,6 @@ public interface OrderService {
 
     List<OrderDto> getOrdersByUser(Map<String, Object> requestMap);
 
-    void cancelOrder(Map<String, Object> requestMap);
+    OrderDto cancelOrder(Map<String, Object> requestMap);
 }
 

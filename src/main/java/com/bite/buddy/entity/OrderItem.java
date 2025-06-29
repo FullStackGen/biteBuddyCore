@@ -18,7 +18,7 @@ import lombok.Setter;
 public class OrderItem {
 
     @Id
-    private String orderItemId;
+    private String orderItemIdentifier;
 
     @JsonIgnore
     @ManyToOne

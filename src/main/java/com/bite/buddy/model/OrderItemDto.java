@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OrderItemDto {
-    private String orderItemId;
+    private String orderItemIdentifier;
     private String orderId;
     private String menuId;
     private Integer quantity;

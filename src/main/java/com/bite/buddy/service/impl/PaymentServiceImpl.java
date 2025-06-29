@@ -1,9 +1,9 @@
 package com.bite.buddy.service.impl;
 
+import com.bite.buddy.configuration.ApplicationConstant;
 import com.bite.buddy.entity.Order;
 import com.bite.buddy.entity.Payment;
 import com.bite.buddy.exceptions.ResourceNotFoundException;
-import com.bite.buddy.model.PaymentDto;
 import com.bite.buddy.repository.OrderRepo;
 import com.bite.buddy.repository.PaymentRepo;
 import com.bite.buddy.service.PaymentService;
@@ -22,49 +22,51 @@ public class PaymentServiceImpl implements PaymentService {
     private PaymentRepo paymentRepo;
     @Autowired
     private OrderRepo orderRepo;
+    @Autowired
+    private StripePaymentService stripePaymentService;
 
     public PaymentServiceImpl(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 
     @Override
-    public PaymentDto addPayment(Map<String, Object> requestMap) {
-        PaymentDto dto = (PaymentDto) requestMap.get("payment");
+    public String initiatePayment(Map<String, Object> requestMap) {
         String orderId = requestMap.get("orderId").toString();
         Order order = orderRepo.findByOrderId(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "id", orderId));
-        Payment payment = modelMapper.map(dto, Payment.class);
-        payment.setOrder(order);
-        UUID id = UUID.randomUUID();
-        long n = (id.getLeastSignificantBits() ^ id.getMostSignificantBits()) & Long.MAX_VALUE;
-        payment.setPaymentId("PA." + n);
-        return modelMapper.map(paymentRepo.save(payment), PaymentDto.class);
+        if (!order.getStatus().equals(ApplicationConstant.OrderStatus.PENDING_PAYMENT)) {
+            throw new IllegalStateException("Payment cannot be initiated for non-pending orders.");
+        }
+
+        try {
+            String paymentUrl = stripePaymentService.createCheckoutSession(
+                    orderId,
+                    order.getTotalPrice(),
+                    "http://localhost:8080/api/payment/success",
+                    "http://localhost:8080/api/payment/cancel"
+            );
+
+            // Optionally update Payment entity
+            Payment payment = new Payment();
+            UUID id = UUID.randomUUID();
+            long n = (id.getLeastSignificantBits() ^ id.getMostSignificantBits()) & Long.MAX_VALUE;
+            payment.setPaymentId("PM." + n);
+            payment.setOrder(order);
+            payment.setAmount(order.getTotalPrice());
+            payment.setStatus(ApplicationConstant.PaymentStatus.PENDING);
+            payment.setMethod(ApplicationConstant.PaymentMethod.UPI);
+            payment.setProvider("STRIPE");
+            paymentRepo.save(payment);
+
+            return paymentUrl;
+        } catch (Exception e) {
+            throw new RuntimeException("Stripe payment initiation failed: " + e.getMessage());
+        }
     }
 
     @Override
-    public PaymentDto updatePayment(Map<String, Object> requestMap) {
-        String paymentId = requestMap.get("paymentId").toString();
-        PaymentDto dto = (PaymentDto) requestMap.get("payment");
-        Payment payment = paymentRepo.findByPaymentId(paymentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Payment", "id", paymentId));
-        modelMapper.map(dto, payment);
-        return modelMapper.map(paymentRepo.save(payment), PaymentDto.class);
+    public boolean verifyPayment(Map<String, Object> requestMap) {
+        return false;
     }
 
-    @Override
-    public PaymentDto getPaymentByOrder(Map<String, Object> requestMap) {
-        String orderId = requestMap.get("orderId").toString();
-        Payment payment = paymentRepo.findByOrder_OrderId(orderId)
-                .orElseThrow(() -> new ResourceNotFoundException("Payment", "id", orderId));
-        return modelMapper.map(payment, PaymentDto.class);
-    }
-
-    @Override
-    public void deletePayment(Map<String, Object> requestMap) {
-        String paymentId = requestMap.get("paymentId").toString();
-        Payment payment = paymentRepo.findByPaymentId(paymentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Payment", "id", paymentId));
-        paymentRepo.delete(payment);
-    }
 }
-
