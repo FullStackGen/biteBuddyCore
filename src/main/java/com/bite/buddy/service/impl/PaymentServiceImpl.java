@@ -7,8 +7,8 @@ import com.bite.buddy.exceptions.ResourceNotFoundException;
 import com.bite.buddy.repository.OrderRepo;
 import com.bite.buddy.repository.PaymentRepo;
 import com.bite.buddy.service.PaymentService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -17,17 +17,20 @@ import java.util.UUID;
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
-    private final ModelMapper modelMapper;
     @Autowired
     private PaymentRepo paymentRepo;
+
     @Autowired
     private OrderRepo orderRepo;
+
     @Autowired
     private StripePaymentService stripePaymentService;
 
-    public PaymentServiceImpl(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-    }
+    @Value("${stripe.success.url}")
+    private String stripeSuccessUrl;
+
+    @Value("${stripe.failure.url}")
+    private String stripeFailureUrl;
 
     @Override
     public String initiatePayment(Map<String, Object> requestMap) {
@@ -42,8 +45,8 @@ public class PaymentServiceImpl implements PaymentService {
             String paymentUrl = stripePaymentService.createCheckoutSession(
                     orderId,
                     order.getTotalPrice(),
-                    "http://localhost:8080/api/payment/success",
-                    "http://localhost:8080/api/payment/cancel"
+                    stripeSuccessUrl,
+                    stripeFailureUrl
             );
 
             // Optionally update Payment entity
@@ -68,5 +71,4 @@ public class PaymentServiceImpl implements PaymentService {
     public boolean verifyPayment(Map<String, Object> requestMap) {
         return false;
     }
-
 }

@@ -9,13 +9,15 @@ import com.stripe.model.Event;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/biteBuddy/customer/payment")
 public class PaymentWebhookController {
 
-    private final String endpointSecret = "whsec_..."; // Stripe webhook secret
+    @Value("${stripe.webhook.secret}")
+    private String endpointSecret; // Stripe webhook secret
 
     @Autowired
     private OrderRepo orderRepo;
