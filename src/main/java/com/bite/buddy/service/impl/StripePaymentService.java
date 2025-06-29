@@ -4,14 +4,18 @@ import com.stripe.Stripe;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StripePaymentService {
 
+    @Value("${stripe.secret.key}")
+    private String secretKey;
+
     @PostConstruct
     public void init() {
-        Stripe.apiKey = "sk_test_51RfG4THCTBaV3QUluXuu6kptpbLt4VkQcmf6yhljbz4NWMNwl47qLfcnHdJZqfDEaPI9GfqSvAf3wYWZFbboGOHO00nwd7gdcu";
+        Stripe.apiKey = secretKey;
     }
 
     public String createCheckoutSession(String orderId, Double amount, String successUrl, String cancelUrl) throws Exception {
